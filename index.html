@@ -24,26 +24,32 @@
       background: var(--bg);
       color: var(--text);
       padding-bottom: 5rem;
+      overflow-x: hidden;
     }
 
-    /* Responsive Header Banner (Fits 2172x661 across all screens) */
+    /* Responsive Header Banner */
     .header-banner {
       width: 100%;
       background: var(--primary);
       position: relative;
       overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .header-banner img {
       width: 100%;
+      max-width: 100%;
       height: auto;
       aspect-ratio: 2172 / 661;
-      object-fit: contain;
+      object-fit: cover;
+      object-position: center;
       display: block;
     }
 
     .header-text-container {
-      padding: 1.5rem 1rem;
+      padding: 1.5rem 1rem 1rem 1rem;
       text-align: center;
       background: #ffffff;
       border-bottom: 1px solid var(--border);
@@ -60,6 +66,69 @@
       font-size: 0.9rem;
       color: var(--text-muted);
       font-weight: 500;
+    }
+
+    /* SLIDING TAB SELECTOR */
+    .tab-selector-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-top: 1.25rem;
+    }
+
+    .tab-selector {
+      position: relative;
+      display: flex;
+      background: #e2e8f0;
+      border-radius: 30px;
+      padding: 4px;
+      width: 260px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      padding: 8px 0;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      z-index: 2;
+      transition: color 0.3s ease;
+    }
+
+    .tab-btn.active {
+      color: #ffffff;
+    }
+
+    .tab-glider {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      height: calc(100% - 8px);
+      width: calc(50% - 4px);
+      background: var(--primary);
+      border-radius: 26px;
+      z-index: 1;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Main Viewport Slider */
+    .view-slider-wrapper {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .view-slider {
+      display: flex;
+      width: 200%;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .view-pane {
+      width: 50%;
+      flex-shrink: 0;
     }
 
     /* Main Container */
@@ -84,23 +153,24 @@
       letter-spacing: 0.5px;
     }
 
-    .candidates-list {
+    .candidates-list, .news-list {
       display: flex;
       flex-direction: column;
       gap: 0.6rem;
     }
 
-    /* Candidate Tally Card */
-    .candidate-tally-card {
+    /* Candidate Tally Card & News Card */
+    .candidate-tally-card, .news-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 1rem 1.25rem;
-      cursor: pointer;
       transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
-    .candidate-tally-card:hover {
+    .candidate-tally-card { cursor: pointer; }
+
+    .candidate-tally-card:hover, .news-card:hover {
       border-color: var(--primary);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     }
@@ -171,6 +241,37 @@
       background: var(--primary);
     }
 
+    /* News Styling */
+    .news-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.3rem;
+    }
+
+    .news-date {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+    }
+
+    .news-image {
+      width: 100%;
+      max-height: 320px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin: 0.75rem 0;
+      display: block;
+      background-color: #f1f5f9;
+      border: 1px solid var(--border);
+    }
+
+    .news-body {
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: var(--text);
+    }
+
     /* Minimalist Profile Modal */
     .modal-overlay {
       position: fixed;
@@ -183,9 +284,7 @@
       padding: 1rem;
     }
 
-    .modal-overlay.active {
-      display: flex;
-    }
+    .modal-overlay.active { display: flex; }
 
     .modal-card {
       background: #ffffff;
@@ -206,8 +305,7 @@
 
     .modal-close {
       position: absolute;
-      top: 10px;
-      right: 14px;
+      top: 10px; right: 14px;
       background: transparent;
       border: none;
       font-size: 1.4rem;
@@ -216,8 +314,7 @@
     }
 
     .modal-avatar {
-      width: 90px;
-      height: 90px;
+      width: 90px; height: 90px;
       border-radius: 50%;
       object-fit: cover;
       border: 3px solid var(--primary);
@@ -252,8 +349,7 @@
     /* Fixed Full-Width White Footer */
     .fixed-footer-left {
       position: fixed;
-      bottom: 0;
-      left: 0;
+      bottom: 0; left: 0;
       width: 100%;
       background: #ffffff;
       border-top: 1px solid var(--border);
@@ -292,15 +388,40 @@
     <img src="header.png" alt="SSLG Election Header" onerror="this.style.display='none';">
   </div>
 
-  <!-- Title Header -->
+  <!-- Title Header & Selection Switcher -->
   <div class="header-text-container">
     <h1 id="viewTitle">Piddig National High School Result of SSLG ELECTION Voting</h1>
     <p id="viewSubtitle">Official Live Election Results</p>
+
+    <!-- Sliding Selector -->
+    <div class="tab-selector-wrapper">
+      <div class="tab-selector">
+        <div class="tab-glider" id="glider"></div>
+        <button class="tab-btn active" id="btnTally" onclick="switchTab('tally')">The Tally</button>
+        <button class="tab-btn" id="btnNews" onclick="switchTab('news')">News</button>
+      </div>
+    </div>
   </div>
 
-  <!-- Live Candidates Display -->
-  <div class="container" id="resultsContainer">
-    <p style="text-align: center; color: #888;">Loading results...</p>
+  <!-- Views Container (Sliding Wrapper) -->
+  <div class="view-slider-wrapper">
+    <div class="view-slider" id="viewSlider">
+      
+      <!-- PANE 1: TALLY RESULTS -->
+      <div class="view-pane">
+        <div class="container" id="resultsContainer">
+          <p style="text-align: center; color: #888;">Loading results...</p>
+        </div>
+      </div>
+
+      <!-- PANE 2: NEWS FEED -->
+      <div class="view-pane">
+        <div class="container" id="newsContainer">
+          <p style="text-align: center; color: #888;">Loading news...</p>
+        </div>
+      </div>
+
+    </div>
   </div>
 
   <!-- CANDIDATE PROFILE MODAL -->
@@ -341,6 +462,27 @@
 
     let globalCandidates = {};
 
+    // TAB SLIDE SWITCHER LOGIC
+    window.switchTab = function(type) {
+      const glider = document.getElementById("glider");
+      const btnTally = document.getElementById("btnTally");
+      const btnNews = document.getElementById("btnNews");
+      const viewSlider = document.getElementById("viewSlider");
+
+      if (type === 'tally') {
+        glider.style.transform = "translateX(0)";
+        btnTally.classList.add("active");
+        btnNews.classList.remove("active");
+        viewSlider.style.transform = "translateX(0)";
+      } else {
+        glider.style.transform = "translateX(100%)";
+        btnNews.classList.add("active");
+        btnTally.classList.remove("active");
+        viewSlider.style.transform = "translateX(-50%)";
+      }
+    };
+
+    // SETTINGS SYNC
     onValue(ref(db, "settings"), (snapshot) => {
       const data = snapshot.val();
       if (data) {
@@ -351,6 +493,7 @@
 
     const container = document.getElementById("resultsContainer");
 
+    // TALLY DATA SYNC
     onValue(ref(db, "candidates"), (snapshot) => {
       container.innerHTML = "";
       const data = snapshot.val();
@@ -410,6 +553,40 @@
       });
     });
 
+    // NEWS DATA SYNC (WITH PICTURE SUPPORT)
+    const newsContainer = document.getElementById("newsContainer");
+    onValue(ref(db, "news"), (snapshot) => {
+      newsContainer.innerHTML = "";
+      const data = snapshot.val();
+
+      if (!data) {
+        newsContainer.innerHTML = '<p style="text-align: center; color: #888;">No news updates published yet.</p>';
+        return;
+      }
+
+      let newsListHtml = '<div class="news-list">';
+      const items = Object.keys(data).map(key => data[key]);
+      
+      items.reverse().forEach(item => {
+        // Detect picture link if present in common field names
+        const imgUrl = item.image || item.imageUrl || item.picture || item.photo;
+        const imgHtml = imgUrl ? `<img src="${escapeHtml(imgUrl)}" class="news-image" alt="News Image" onerror="this.style.display='none';">` : '';
+
+        newsListHtml += `
+          <div class="news-card">
+            <div class="news-title">${escapeHtml(item.title || 'Announcement')}</div>
+            <div class="news-date">${item.timestamp ? new Date(item.timestamp).toLocaleString() : ''}</div>
+            ${imgHtml}
+            <div class="news-body">${escapeHtml(item.content || item.text || '')}</div>
+          </div>
+        `;
+      });
+
+      newsListHtml += '</div>';
+      newsContainer.innerHTML = newsListHtml;
+    });
+
+    // MODAL FUNCTIONS
     window.showCandidateModal = function(id) {
       const candidate = globalCandidates[id];
       if (!candidate) return;
